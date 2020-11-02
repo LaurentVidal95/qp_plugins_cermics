@@ -12,6 +12,8 @@ program Extract_data
   integer                               :: mod
   double precision                      :: get_ao_two_e_integral
 
+  !####################################################### Write 1 element and corresponding indices  per line
+  
   !Overlap matrix
   open(1,file = 'overlap_matrix.dat')
   do i=1,ao_num
@@ -54,5 +56,54 @@ program Extract_data
   write(4,*)ao_num,elec_beta_num,accu
   close(4)
 
+  print*,"############ EXTRACTION DONE ############"
+
+  !######################################### Write directly in an Julia array format
+
+  
+  ! ! Overlap matrix
+  ! open(10, file = "working_dir/overlap_matrix.dat")
+  ! do i = 1, ao_num
+  !    write(10,'(100(F16.10,X))')overlap_matrix(i,:)
+  ! enddo
+  ! close(10)
+
+  ! ! Nums_orbitals
+  ! open(2, file = "working_dir/nums_orbitals.dat")
+  ! write(2, '(3(I4,X))')ao_num,elec_beta_num,elec_alpha_num-elec_beta_num
+  ! close(2)
+
+
+  ! ! H_core
+  ! double precision, allocatable :: H_core(:,:)
+  ! allocate(H_core(ao_num,ao_num))
+  ! do j=1,ao_num
+  !    do i = 1,ao_num
+  !       H_core(i,j) = ao_one_e_integrals(i,j)
+  !    enddo
+  ! enddo
+  
+  ! open(3, file = "working_dir/H_core.dat")
+  ! do i = 1, ao_num
+  !    write(3,'(100(F16.10,X))')H_core(i,:)
+  ! enddo
+  ! close(3)
+
+
+  ! !Four index tensor
+  ! open(4, file = "working_dir/Four_index_tensor.dat")
+  ! do i=1,ao_num
+  !    do j=1,ao_num
+  !       do k=1,ao_num
+  !          do l=1,ao_num
+  !             accu = get_ao_two_e_integral(i,k,j,l,ao_integrals_map)
+  !             write(4,*)i,j,k,l,accu
+  !          enddo
+  !       enddo
+  !    enddo
+  ! enddo
+  ! close(4)
+
+  ! print*,"############ THE JOB IS DONE ############"
 
 end program Extract_data

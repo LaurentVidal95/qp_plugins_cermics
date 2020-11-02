@@ -42,8 +42,8 @@ BEGIN_PROVIDER[double precision, overlap_matrix, (ao_num,ao_num)]
         accu = 0.d0
         accu_inv = 0.d0
         do k =1,ao_num
-           accu += eigvectors(i,k)*sqrt(eigvalues(k))*eigvectors(j,k)
-           accu_inv += eigvectors(i,k)*(1/sqrt(eigvalues(k)))*eigvectors(j,k)
+           accu += eigvectors(i,k)*dsqrt(eigvalues(k))*eigvectors(j,k)
+           accu_inv += eigvectors(i,k)*(1/dsqrt(eigvalues(k)))*eigvectors(j,k)
         enddo
         sqrt_overlap(i,j) = accu
         inv_sqrt_overlap(i,j) = accu_inv
@@ -82,35 +82,37 @@ subroutine init_guess(Pd_init,Ps_init)
   double precision, dimension(ao_num,ao_num)              :: H,tmp_mat,eigvectors
   double precision, dimension(ao_num)                     :: eigvalues
 
-  ! Compute Pd Ps for non-orthogonal basis given by mo_coefs
+  !Compute Pd Ps for non-orthogonal basis given by mo_coefs
 
-  ! Pd_tmp = 0.d0
-  ! Ps_tmp = 0.d0
+  call huckel_guess()
+  
+  Pd_tmp = 0.d0
+  Ps_tmp = 0.d0
 
-  ! do j=1,ao_num
-  !    do i=1,ao_num
-  !       accu_d = 0.d0
-  !       accu_s = 0.d0
-  !       do k=1,elec_beta_num
-  !          accu_d += mo_coef_transp(k,i)*mo_coef_transp(k,j)
-  !       enddo
-  !       do k=elec_beta_num+1,elec_alpha_num
-  !          accu_s +=  mo_coef_transp(k,i)*mo_coef_transp(k,j)
-  !       enddo
-  !       Pd_tmp(i,j) = accu_d
-  !       Ps_tmp(i,j) = accu_s
-  !    enddo
-  ! enddo
+  do j=1,ao_num
+     do i=1,ao_num
+        accu_d = 0.d0
+        accu_s = 0.d0
+        do k=1,elec_beta_num
+           accu_d += mo_coef_transp(k,i)*mo_coef_transp(k,j)
+        enddo
+        do k=elec_beta_num+1,elec_alpha_num
+           accu_s +=  mo_coef_transp(k,i)*mo_coef_transp(k,j)
+        enddo
+        Pd_tmp(i,j) = accu_d
+        Ps_tmp(i,j) = accu_s
+     enddo
+  enddo
 
-  ! ###### OPTIONAL : Import guess written in files "Pd_core.dat" and "Ps_core.dat"
-  open(1,file = 'Pd_core.dat')
-  read(1,*) Pd_tmp
-  close(1)
+  ! ! ###### OPTIONAL : Import guess written in files "Pd_core.dat" and "Ps_core.dat"
+  ! open(1,file = 'Pd_core.dat')
+  ! read(1,*) Pd_tmp
+  ! close(1)
 
-  open(2,file = 'Ps_core.dat')
-  read(2,*) Ps_tmp
-  close(2)
-  ! ################
+  ! open(2,file = 'Ps_core.dat')
+  ! read(2,*) Ps_tmp
+  ! close(2)
+  ! ! ################
 
   !Orthogonalization
   Pd_init = matmul(sqrt_overlap,matmul(Pd_tmp,sqrt_overlap))
@@ -137,7 +139,7 @@ double precision function test_projs(Pd,Ps) result(result)
   END_DOC
 
   integer                                     :: i,j,k,l
-  double precision                            :: accu, out
+  double precision                            :: accu_d,accu_s, out
   double precision, dimension(ao_num,ao_num)  :: temp_matrix
 
   double precision, dimension(ao_num,ao_num), intent(in) :: Pd,Ps
@@ -157,11 +159,17 @@ double precision function test_projs(Pd,Ps) result(result)
   out  += Norm2(temp_matrix)
 
   !Test traces
-  accu = 0.d0
+  accu_d = 0.d0
+  accu_s = 0.d0
   do i=1,ao_num
-     accu += Pd(i,i) + Ps(i,i)
+     accu_d += Pd(i,i)
   enddo
-  out += accu - elec_alpha_num
+  
+  do i=1,ao_num
+     accu_s += Ps(i,i)
+  enddo
+  out += accu_d - elec_beta_num
+  out -= accu_s - (elec_alpha_num-elec_beta_num)
 
   result = out
   

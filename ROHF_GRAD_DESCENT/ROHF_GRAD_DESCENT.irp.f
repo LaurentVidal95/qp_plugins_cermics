@@ -7,6 +7,8 @@ program ROHF_GRAD_DESCENT
   ! Pd is the projector on doubly occupied orbitals
   ! Ps is the projector on singly occupied orbitals
   !
+  ! TODO : add asserts !
+  !
   END_DOC
 
   integer                                       :: iter
@@ -16,9 +18,9 @@ program ROHF_GRAD_DESCENT
   double precision, dimension(ao_num,ao_num)    :: Gd,Gs, eigvectors, U
   double precision, dimension(ao_num)           :: eigvalues
 
-  double precision, dimension(ao_num,ao_num)    :: hd,hs,Qd,Qs,test_Qd,test_Qs,Id,Pv !TEST
-  double precision                              :: accu_1,accu_2,accu_test ! TEST
-  integer :: i,j,k,l !TEST
+  ! double precision, dimension(ao_num,ao_num)    :: hd,hs,Qd,Qs,test_Qd,test_Qs,Id,Pv !TEST
+  ! double precision                              :: accu_1,accu_2,accu_test ! TEST
+  ! integer :: i,j,k,l !TEST
 
 
 
@@ -29,7 +31,7 @@ program ROHF_GRAD_DESCENT
   iter = 0
   ! threshold = 1e-15
   delta_energy = 1.d0
-  ! step = 0.001d0
+  step = 0.008d0 !Adapt the initial step to the system. Greater than 0.05d0 affects convergence.
   
   energy = get_rohf_energy(Pd,Ps)
   test = test_projs(Pd,Ps)
@@ -65,19 +67,18 @@ program ROHF_GRAD_DESCENT
      !P
      tmp_mat = Pd + Ps - step*Gd - step*Gs
      call lapack_diagd(eigvalues,U,tmp_mat,ao_num,ao_num)
-       
-     call Retraction(tmp_mat,U,P)
+     call retraction(tmp_mat,U,P)
 
      !Pd
      tmp_mat = matmul(P,matmul(Pd - step*Gd,P))
      call lapack_diagd(eigvalues,U,tmp_mat,ao_num,ao_num)
-     call Retraction(tmp_mat,U,Pd) 
+     call retraction(tmp_mat,U,Pd) 
 
      !Ps
      Ps = P - Pd
 
      test = test_projs(Pd,Ps)
-
+     
      ! Compute new delta__energy
      energy  = get_rohf_energy(Pd,Ps) 
      delta_energy = energy -  energy_prev
@@ -94,55 +95,61 @@ program ROHF_GRAD_DESCENT
      
   enddo
 
+
+    
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  !        END  Main Loop           !
+  !         END MAIN LOOP           !
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-   write(6,'(A6, 1X, A16, 1X, A16, 1X, A16, 1X, A16)')  &
-    '======','================','================','================','================'
-   write(6,*)
-
-   call write_double(6, energy, 'ROHF energy')
-
-   call write_time(6)
-
-   if (iter < max_iter) then
-      print*,'CONVERGED at iteration',iter
-   else
-      print*,'NOT CONVERGED'
-   endif
-
- 
-end program ROHF_GRAD_DESCENT
-
-
-
-
-
-
-!TEST GRAD
-
-  ! call get_grad_projs(Pd,Ps,Gd,Gs)
-
-  ! call get_Qd_Qs(Pd,Ps,Qd,Qs)
-  ! ! do i=1,ao_num
-  !    ! do j=1,ao_num
-  !       ! Qd(i,j) = 1e-4
-  !       ! Qs(i,j) = 1e-4
-  !    ! enddo
-  ! ! enddo
   
-  ! accu_1 =0.d0
+
+  write(6,'(A6, 1X, A16, 1X, A16, 1X, A16, 1X, A16)')  &
+       '======','================','================','================','================'
+  write(6,*)
+
+  call write_double(6, energy, 'ROHF energy')
+
+  call write_time(6)
+
+  if (iter < max_iter) then
+     print*,'CONVERGED at iteration',iter
+  else
+     print*,'NOT CONVERGED'
+  endif
+  
+  ! ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  ! ! !           Extract Mos           !
+  ! ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+  ! ! STEP 1 Extract final densities
   ! do i=1,ao_num
-  !    do k=1,ao_num
-  !       accu_1+=( Gd(i,k)*Qd(i,k) + Gs(i,k)*Qs(i,k) )
-  !    enddo
+  !    write(10,'(100(F16.10,X))')Pd(i,:)
   ! enddo
 
-  ! accu_2 = get_rohf_energy(Pd + Qd, Ps + Qs) - get_rohf_energy(Pd, Ps)
+  ! do i=1,ao_num
+  !    write(11,'(100(F16.10,X))')Ps(i,:)
+  ! enddo
+  
+    
+  ! Step 2 execute extract_mos.jl
+  ! Way to automatize this ?
 
-  ! accu_test = Norm2(Qd)
-  ! print*,'Norm : ',accu_test
-  ! print*,'Expected : ',accu_2
-  ! print*,'Obtained ; ',accu_1
-  ! print*,'Delta :',abs(accu_2-accu_1)
+  ! ! Step 3 read new MOs, and save MOs coeffs
+  ! double precision, allocatable   :: new_mos(:,:)
+  ! allocate(new_mos(ao_num,ao_num))
+  ! open(39,file = 'working_dir/new_orbitals.dat')
+  ! read(39,*) new_mos
+  ! close(39) 
+  
+  ! mo_coef = transpose(new_mos)   !!!ATTENTION
+  ! touch mo_coef
+  ! mo_label = "Natural"
+  ! call save_mos
+
+  ! energy = scf_energy
+
+  ! print*,energy
+
+  
+   
+end program ROHF_GRAD_DESCENT

@@ -1,0 +1,56 @@
+#
+#  _______                     _____
+#  __  __ \___  _______ _________  /____  ________ ___
+#  _  / / /  / / /  __ `/_  __ \  __/  / / /_  __ `__ \
+#  / /_/ // /_/ // /_/ /_  / / / /_ / /_/ /_  / / / / /
+#  \___\_\\__,_/ \__,_/ /_/ /_/\__/ \__,_/ /_/ /_/ /_/
+#
+#               ________             ______
+#               ___  __ \_____ _________  /_______ _______ _____
+#               __  /_/ /  __ `/  ___/_  //_/  __ `/_  __ `/  _ \
+#               _  ____// /_/ // /__ _  ,<  / /_/ /_  /_/ //  __/
+#               /_/     \__,_/ \___/ /_/|_| \__,_/ _\__, / \___/
+#                                                  /____/
+#
+# https://github.com/LCPQ/quantum_package,
+#
+# Generated automatically by $QP_ROOT/scripts/compilation/qp_create_ninja
+#
+#
+
+QP_ROOT = /home/laurent/CompCHEM/qp2-2.1.2
+
+builddir = $QP_ROOT/config
+
+rule update_build_ninja_root
+   command = /home/laurent/CompCHEM/qp2-2.1.2/scripts/compilation/qp_create_ninja update
+
+rule make_local_binaries
+   command = ninja -f $QP_ROOT/config/build.ninja module_ROHF_GRAD_DESCENT
+   pool = console
+   description = Compile only ROHF_GRAD_DESCENT
+
+rule make_all_binaries
+  command = ninja -f $QP_ROOT/config/build.ninja
+  pool = console
+  description = Compiling all modules
+
+rule make_clean
+  command = module_handler.py clean ROHF_GRAD_DESCENT
+  description = Cleaning module ROHF_GRAD_DESCENT
+
+rule executables
+  command = make -C $QP_ROOT/ocaml executables .gitignore qp_edit.native qp_run.native
+  description = Updating OCaml executables
+
+build dummy_target: update_build_ninja_root
+
+build all: make_all_binaries dummy_target
+
+build local: make_local_binaries dummy_target
+
+build executables: executables local dummy_target
+
+default executables
+
+build clean: make_clean dummy_target

@@ -91,6 +91,7 @@ end subroutine get_J_K
     ! Retrieve true density matrices (ie for non orthogonal basis)
     True_Pd = matmul(inv_sqrt_overlap,matmul(Pd,inv_sqrt_overlap))
     True_Ps = matmul(inv_sqrt_overlap,matmul(Ps,inv_sqrt_overlap))
+
     ! Compute associated J and K
     call get_J_K(True_Pd,Jd,Kd)
     call get_J_K(True_Ps,Js,Ks)
@@ -182,7 +183,7 @@ end subroutine get_grad_projs
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
-subroutine Retraction(P,U,R_P)
+subroutine retraction(P,U,R_P)
   implicit none
   BEGIN_DOC
   ! Apply retraction R to P and retrive R_P, given eigenvectors U
@@ -211,47 +212,4 @@ subroutine Retraction(P,U,R_P)
      enddo
   enddo
 
-end subroutine Retraction
-
-
-
-
-
-
-
-
-
-
-!TEST GRAD
- 
-! subroutine get_Qd_Qs(Pd,Ps,Qd,Qs)
-!   implicit none
-!   integer                                    :: i,j,k,l
-!   double precision, dimension(ao_num,ao_num), intent(in) :: Pd,Ps
-!   double precision, dimension(ao_num,ao_num), intent(out):: Qd,Qs
-!   double precision, dimension(ao_num,ao_num) :: Qd_tmp, Qs_tmp, Id, Pv
-!   double precision, dimension(ao_num,ao_num) :: U, eigvectors
-!   double precision, dimension(ao_num)        :: eigvalues
-  
-
-!   Id = 0.d0
-!   do i=1,ao_num
-!      Id(i,i) = 1.d0
-!   enddo
-
-!   Pv = Id - Pd - Ps
-       
-!   do i=1,ao_num
-!      do j=1,ao_num
-!         Qd_tmp(i,j) = 1e-2
-!         Qs_tmp(i,j)= 1e-2
-!      enddo
-!   enddo
-
-!   Qd = matmul(Pd,matmul(Qd_tmp,Ps)) + matmul(Ps,matmul(Qd_tmp,Pd))&
-!        + 2.d0*matmul(Pd,matmul(Qd_tmp,Pv)) + 2.d0*matmul(Pv,matmul(Qd_tmp,Pd))
-!   Qs = -matmul(Pd,matmul(Qd_tmp,Ps)) - matmul(Ps,matmul(Qd_tmp,Pd))&
-!        + 2.d0*matmul(Pv,matmul(Qd_tmp,Ps)) + 2.d0*matmul(Ps,matmul(Qd_tmp,Pv))
-
-
-! end subroutine get_Qd_Qs
+end subroutine retraction
