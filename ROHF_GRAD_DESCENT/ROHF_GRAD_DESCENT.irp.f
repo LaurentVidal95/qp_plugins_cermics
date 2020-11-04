@@ -11,16 +11,16 @@ program ROHF_GRAD_DESCENT
   !
   END_DOC
 
-  integer                                       :: iter
+  integer                                       :: iter, i,j,k,l
   double precision                              :: get_rohf_energy, test_projs !Functions
   double precision                              :: energy_prev, energy, delta_energy, test, grad_norm
   double precision, dimension(ao_num,ao_num)    :: Pd,Ps,P,tmp_mat   
   double precision, dimension(ao_num,ao_num)    :: Gd,Gs, eigvectors, U
   double precision, dimension(ao_num)           :: eigvalues
-
-  ! double precision, dimension(ao_num,ao_num)    :: hd,hs,Qd,Qs,test_Qd,test_Qs,Id,Pv !TEST
-  ! double precision                              :: accu_1,accu_2,accu_test ! TEST
-  ! integer :: i,j,k,l !TEST
+  
+  double precision, dimension(ao_num,ao_num)    :: hd,hs,Qd,Qs,test_Qd,test_Qs,Id,Pv !TEST
+  double precision                              :: accu_1,accu_2,accu_test ! TEST
+   !TEST
 
 
 
@@ -115,41 +115,28 @@ program ROHF_GRAD_DESCENT
   else
      print*,'NOT CONVERGED'
   endif
+
+
+  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  !        WRITE FINAL DMs          !
+  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+  open(10, file = "data_dir/Pd.dat")
+  do i=1,ao_num
+     write(10,'(100(F16.10,X))')Pd(i,:)
+  enddo
+  close(10)
+
+  open(11, file = "data_dir/Ps.dat")
+  do i=1,ao_num
+     write(11,'(100(F16.10,X))')Ps(i,:)
+  enddo
+  close(11)
   
-  ! ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  ! ! !           Extract Mos           !
-  ! ! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-
-  ! ! STEP 1 Extract final densities
-  ! do i=1,ao_num
-  !    write(10,'(100(F16.10,X))')Pd(i,:)
-  ! enddo
-
-  ! do i=1,ao_num
-  !    write(11,'(100(F16.10,X))')Ps(i,:)
-  ! enddo
-  
-    
-  ! Step 2 execute extract_mos.jl
-  ! Way to automatize this ?
-
-  ! ! Step 3 read new MOs, and save MOs coeffs
-  ! double precision, allocatable   :: new_mos(:,:)
-  ! allocate(new_mos(ao_num,ao_num))
-  ! open(39,file = 'working_dir/new_orbitals.dat')
-  ! read(39,*) new_mos
-  ! close(39) 
-  
-  ! mo_coef = transpose(new_mos)   !!!ATTENTION
-  ! touch mo_coef
-  ! mo_label = "Natural"
-  ! call save_mos
-
-  ! energy = scf_energy
-
-  ! print*,energy
-
+  mo_label = "Guess"
+  call save_mos
   
    
 end program ROHF_GRAD_DESCENT
+
