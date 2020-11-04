@@ -7,7 +7,7 @@ function extract_N(file_name)
     g=[parse(Int,x) for x in split(readline(f))]
 end
 end
-g=extract_N("working_dir/nums_orbitals.dat")
+g=extract_N("data_dir/nums_orbitals.dat")
 Nb=g[1]
 Nd=g[2]
 Ns=g[3]
@@ -24,12 +24,12 @@ function extract_matrix(file_name,Nb)
     end
 end
 
-Pd = Symmetric(extract_matrix("working_dir/Pd.dat",Nb))
-Ps = Symmetric(extract_matrix("working_dir/Ps.dat",Nb))
+Pd = Symmetric(extract_matrix("data_dir/Pd.dat",Nb))
+Ps = Symmetric(extract_matrix("data_dir/Ps.dat",Nb))
 
 
 
-S = Symmetric(extract_matrix("working_dir/overlap_matrix.dat",Nb))
+S = Symmetric(extract_matrix("data_dir/overlap_matrix.dat",Nb))
 S12=real(sqrt(S))
 Sm12=inv(S12);
 
@@ -81,7 +81,7 @@ new_orbitals = Sm12*generate_virtuals(orbitals,Nd+Ns)
 
 
 #write orbitals
-open("working_dir/new_orbitals.dat", "w") do out
+open("data_dir/new_orbitals.dat", "w") do out
     @info "Writing new orbitals",out
     for i in 1:Nb
         line = " "
