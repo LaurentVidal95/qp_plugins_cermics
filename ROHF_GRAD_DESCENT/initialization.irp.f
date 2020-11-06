@@ -132,7 +132,7 @@ end subroutine init_guess
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
-double precision function test_projs(Pd,Ps) result(result)
+double precision function test_projs_ortho(Pd,Ps) result(result)
   implicit none
   BEGIN_DOC
   ! Test the properties of Pd and Ps. The test must be very close to 0.
@@ -174,6 +174,6 @@ double precision function test_projs(Pd,Ps) result(result)
   result = out
   
 
-end function test_projs
+end function test_projs_ortho
 
   

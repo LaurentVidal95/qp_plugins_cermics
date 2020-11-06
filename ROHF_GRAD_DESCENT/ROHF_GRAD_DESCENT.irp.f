@@ -12,7 +12,7 @@ program ROHF_GRAD_DESCENT
   END_DOC
 
   integer                                       :: iter, i,j,k,l
-  double precision                              :: get_rohf_energy, test_projs !Functions
+  double precision                              :: get_rohf_energy, test_projs_ortho !Functions
   double precision                              :: energy_prev, energy, delta_energy, test, grad_norm
   double precision, dimension(ao_num,ao_num)    :: Pd,Ps,P,tmp_mat   
   double precision, dimension(ao_num,ao_num)    :: Gd,Gs, eigvectors, U
@@ -34,7 +34,7 @@ program ROHF_GRAD_DESCENT
   step = 0.008d0 !Adapt the initial step to the system. Greater than 0.05d0 affects convergence.
   
   energy = get_rohf_energy(Pd,Ps)
-  test = test_projs(Pd,Ps)
+  test = test_projs_ortho(Pd,Ps)
   
   call write_time(6)
   
@@ -77,7 +77,7 @@ program ROHF_GRAD_DESCENT
      !Ps
      Ps = P - Pd
 
-     test = test_projs(Pd,Ps)
+     test = test_projs_ortho(Pd,Ps)
      
      ! Compute new delta__energy
      energy  = get_rohf_energy(Pd,Ps) 
@@ -121,13 +121,13 @@ program ROHF_GRAD_DESCENT
   !        WRITE FINAL DMs          !
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  open(10, file = "data_dir/Pd.dat")
+  open(10, file = "Pd_final.dat")
   do i=1,ao_num
      write(10,'(100(F16.10,X))')Pd(i,:)
   enddo
   close(10)
 
-  open(11, file = "data_dir/Ps.dat")
+  open(11, file = "Ps_final.dat")
   do i=1,ao_num
      write(11,'(100(F16.10,X))')Ps(i,:)
   enddo
