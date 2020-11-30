@@ -20,9 +20,6 @@ program ROHF_GRAD_DESCENT
   
   double precision, dimension(ao_num,ao_num)    :: hd,hs,Qd,Qs,test_Qd,test_Qs,Id,Pv !TEST
   double precision                              :: accu_1,accu_2,accu_test ! TEST
-   !TEST
-
-
 
   ! Initial data
   call init_guess(Pd,Ps)
@@ -76,7 +73,7 @@ program ROHF_GRAD_DESCENT
 
      !Ps
      Ps = P - Pd
-
+     
      test = test_projs_ortho(Pd,Ps)
      
      ! Compute new delta__energy
@@ -112,6 +109,7 @@ program ROHF_GRAD_DESCENT
 
   if (iter < max_iter) then
      print*,'CONVERGED at iteration',iter
+     print*,'To actualize MOs, see README file, procedure to canonicalize MOs')
   else
      print*,'NOT CONVERGED'
   endif

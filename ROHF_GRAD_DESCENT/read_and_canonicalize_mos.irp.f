@@ -14,9 +14,6 @@ program read_and_canonicalize_mos
   mo_label = "Natural"
   call save_mos
 
-  ! energy = scf_energy   ! Time consuming ..
-  ! print*,"Energy for the new MOs : ",energy
-
   call roothaan_hall_scf
   
 end program read_and_canonicalize_mos

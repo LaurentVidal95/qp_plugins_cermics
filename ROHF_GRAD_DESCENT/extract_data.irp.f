@@ -65,7 +65,8 @@ program extract_data
 
   print*,"############ EXTRACTION DONE  ############"
 
-
+  mo_label = "None"
+  call save_mos
 
   
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -117,4 +118,7 @@ program extract_data
 
   ! print*,"############ EXTRACTION DONE ############"
 
+  ! mo_label = "None"
+  ! call save_mos
+  
 end program extract_data
