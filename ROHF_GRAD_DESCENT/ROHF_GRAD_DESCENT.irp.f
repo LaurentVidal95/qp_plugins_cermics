@@ -109,7 +109,7 @@ program ROHF_GRAD_DESCENT
 
   if (iter < max_iter) then
      print*,'CONVERGED at iteration',iter
-     print*,'To actualize MOs, see README file, procedure to canonicalize MOs')
+     print*,'To actualize MOs, see README file, procedure to canonicalize MOs'
   else
      print*,'NOT CONVERGED'
   endif

@@ -49,19 +49,20 @@ program extract_data
   close(3)
 
 
-  !Four index tensor [TIME CONSUMING]
-  ! open(4, file = "data_dir/Four_index_tensor.dat")
-  ! do i=1,ao_num
-  !    do j=1,ao_num
-  !       do k=1,ao_num
-  !          do l=1,ao_num
-  !             accu = get_ao_two_e_integral(i,k,j,l,ao_integrals_map)
-  !             write(4,*)i,j,k,l,accu
-  !          enddo
-  !       enddo
-  !    enddo
-  ! enddo
-  ! close(4)
+  ! Four index tensor [TIME CONSUMING]
+  open(4, file = "data_dir/Four_index_tensor.dat")
+  do i=1,ao_num
+     print*, "Extracting: ",i
+     do j=1,ao_num
+        do k=1,ao_num
+           do l=1,ao_num
+              accu = get_ao_two_e_integral(i,k,j,l,ao_integrals_map)
+              write(4,*)i,j,k,l,accu
+           enddo
+        enddo
+     enddo
+  enddo
+  close(4)
 
   print*,"############ EXTRACTION DONE  ############"
 
