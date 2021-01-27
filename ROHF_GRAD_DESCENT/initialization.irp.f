@@ -1,26 +1,9 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !                                                                            !
-!!!!! !!! !        OVERLAP, SQRT_OVERLAP, INV_SQRT_OVERLAP         ! !!! !!!!!
+!!!!! !!! !        SQRT_OVERLAP, INV_SQRT_OVERLAP         ! !!! !!!!!
 !                                                                            !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-BEGIN_PROVIDER[double precision, overlap_matrix, (ao_num,ao_num)]
-  implicit none
-  integer   :: i,j
-  
-  BEGIN_DOC
-  ! Simply provides the overlap matrix S
-  END_DOC
-
-  do i=1,ao_num
-     do j=1,ao_num
-        overlap_matrix(i,j) = ao_overlap(i,j)
-     enddo
-  enddo
-  
-  END_PROVIDER
-
-  
   BEGIN_PROVIDER[double precision,  sqrt_overlap, (ao_num, ao_num)]
 &BEGIN_PROVIDER[double precision,  inv_sqrt_overlap, (ao_num,ao_num)]   
   implicit none
@@ -34,7 +17,7 @@ BEGIN_PROVIDER[double precision, overlap_matrix, (ao_num,ao_num)]
   double precision                           :: accu, accu_inv
 
   !Diagonalize S
-  call lapack_diagd(eigvalues,eigvectors,overlap_matrix,ao_num,ao_num)
+  call lapack_diagd(eigvalues,eigvectors,ao_overlap,ao_num,ao_num)
 
   !Compute the sqare root and inverse square root
   do j=1,ao_num
@@ -61,7 +44,6 @@ BEGIN_PROVIDER[double precision, overlap_matrix, (ao_num,ao_num)]
 
   
 subroutine init_guess(Pd_init,Ps_init)
-    
   implicit none
   BEGIN_DOC
   !Provides initial orthogonal projectors on doubly occupied MOs

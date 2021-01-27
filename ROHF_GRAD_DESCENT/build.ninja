@@ -18,12 +18,12 @@
 #
 #
 
-QP_ROOT = /home/laurent/CompCHEM/qp2
+QP_ROOT = /home/emmanuel/programs/qp2
 
 builddir = $QP_ROOT/config
 
 rule update_build_ninja_root
-   command = /home/laurent/CompCHEM/qp2/scripts/compilation/qp_create_ninja update
+   command = /home/emmanuel/programs/qp2/scripts/compilation/qp_create_ninja update
 
 rule make_local_binaries
    command = ninja -f $QP_ROOT/config/build.ninja module_ROHF_GRAD_DESCENT

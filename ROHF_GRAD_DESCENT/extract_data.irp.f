@@ -21,9 +21,9 @@ program extract_data
 
   
   ! Overlap matrix
-  open(10, file = "data_dir/overlap_matrix.dat")
+  open(10, file = "data_dir/ao_overlap.dat")
   do i = 1, ao_num
-     write(10,'(100(F16.10,X))')overlap_matrix(i,:)
+     write(10,'(100(F16.10,X))')ao_overlap(i,:)
   enddo
   close(10)
 
@@ -76,7 +76,7 @@ program extract_data
 
   
   ! !Overlap matrix
-  ! open(1,file = 'data_dir/overlap_matrix.dat')
+  ! open(1,file = 'data_dir/ao_overlap.dat')
   ! do i=1,ao_num
   !    do j=1,ao_num
   !       write(1,*)i,j,ao_overlap(i,j)
