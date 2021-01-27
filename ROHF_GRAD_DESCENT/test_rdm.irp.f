@@ -43,5 +43,44 @@ program pouet
  print*,''
  print*,'energy_two_e_pd_ps  = ',energy_two_e_pd_ps
  print*,'psi_energy_two_e    = ',psi_energy_two_e
+ print*,''
+ print*,'Test for gradients '
+ print*,''
+ double precision :: norm_of_mat
+ print*,'norm_of_mat(grad_d) = ',norm_of_mat(gradient_d_ortho,ao_num)
+ print*,'norm_of_mat(grad_s) = ',norm_of_mat(gradient_s_ortho,ao_num)
+ print*,''
+ double precision, allocatable :: C_stupid(:,:),C(:,:)
+ double precision :: accu_mat_mul, accu_mat_mul_stupid 
+ allocate(C_stupid(ao_num,ao_num),C(ao_num,ao_num))
+ call sym_square_mat_mul_stupid(sqrt_overlap,inv_sqrt_overlap,ao_num,C_stupid)
+ call sym_square_mat_mul(sqrt_overlap,inv_sqrt_overlap,ao_num,C)
+ accu_mat_mul_stupid = 0.d0
+ accu_mat_mul = 0.d0
+ do i = 1, ao_num
+  do j = 1, ao_num
+   accu_mat_mul_stupid += dabs(C_stupid(j,i))
+   accu_mat_mul        += dabs(C(j,i))
+  enddo
+ enddo
+ print*,'accu_mat_mul_stupid = ',accu_mat_mul_stupid
+ print*,'accu_mat_mul        = ',accu_mat_mul
+ print*,'ao_num              = ',ao_num
+end
 
+
+subroutine sym_square_mat_mul_stupid(A,B,n,C)
+ implicit none
+ double precision, intent(in) :: A(n,n),B(n,n)
+ double precision, intent(out):: C(n,n)
+ integer, intent(in) :: n
+ integer :: i,j,k
+ C = 0.d0
+ do i = 1, ao_num
+  do j = 1, ao_num
+   do k = 1, ao_num
+    C(j,i) += A(j,k) * B(k,j)
+   enddo
+  enddo
+ enddo
 end
