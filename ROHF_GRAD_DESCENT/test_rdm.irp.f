@@ -66,6 +66,41 @@ program pouet
  print*,'accu_mat_mul_stupid = ',accu_mat_mul_stupid
  print*,'accu_mat_mul        = ',accu_mat_mul
  print*,'ao_num              = ',ao_num
+
+ 
+ double precision, allocatable :: Ps(:,:) , Pd(:,:), Pv(:,:), M(:,:), N(:,:), M_proj(:,:), N_proj(:,:)
+ allocate(  Ps(ao_num,ao_num) , Pd(ao_num,ao_num), Pv(ao_num,ao_num) )
+ allocate(  M(ao_num,ao_num), N(ao_num,ao_num), M_proj(ao_num,ao_num), N_proj(ao_num,ao_num) )
+ Pd = density_mat_d_ortho
+ Ps = density_mat_s_ortho
+ Pv = proj_virt_ortho
+ M  = gradient_d_ortho
+ N  = gradient_s_ortho
+ call project_tangent_space(Pd,Ps, Pv, M, N, M_proj, N_proj)
+ print*,''
+ print*,'norm_of_mat(grad_d) = ',norm_of_mat(M_proj,ao_num)
+ print*,'norm_of_mat(grad_s) = ',norm_of_mat(N_proj,ao_num)
+ print*,''
+ print*,'M_proj '
+ do i = 1, ao_num
+  write(*,'(X,100(F16.10,X))')M_proj(i,:)
+ enddo
+ print*,''
+ print*,'N_proj '
+ do i = 1, ao_num
+  write(*,'(X,100(F16.10,X))')N_proj(i,:)
+ enddo
+ print*,'MO_COEF'
+ do i = 1, mo_num
+  write(*,'(X,100(F16.10,X))')mo_coef(:,i)
+ enddo
+ print*,''
+ print*,'S'
+ do i = 1, ao_num
+  write(*,'(X,100(F16.10,X))')ao_overlap(:,i)
+ enddo
+
+ 
 end
 
 

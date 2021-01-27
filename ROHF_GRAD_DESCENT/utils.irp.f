@@ -96,7 +96,7 @@ subroutine project_tangent_space(Pd,Ps, Pv, M, N, M_proj, N_proj)
  double precision, intent(in) :: M(ao_num, ao_num), N(ao_num, ao_num)
  double precision, intent(out):: M_proj(ao_num, ao_num), N_proj(ao_num, ao_num)
  double precision :: M_minus_N(ao_num, ao_num)
- double precision :: mat_tmp(ao_num, ao_num), mapt_tmp2(ao_num, ao_num)
+ double precision :: mat_tmp(ao_num, ao_num), mat_tmp2(ao_num, ao_num)
  M_minus_N = M - N
 
  ! M_proj = Pd(M-N)Ps
@@ -105,7 +105,7 @@ subroutine project_tangent_space(Pd,Ps, Pv, M, N, M_proj, N_proj)
 
  ! mat_tmp2 = 2 Pd M Pv
  call sym_square_mat_mul(Pd,M,ao_num, mat_tmp)
- call sym_square_mat_mul(map_tmp, Pv, ao_num, mat_tmp2)
+ call sym_square_mat_mul(mat_tmp, Pv, ao_num, mat_tmp2)
  mat_tmp2 = 2.d0 * mat_tmp2
 
  ! M_proj = sym(Pd(M-N)Ps + 2 Pd M Pv)
@@ -119,7 +119,7 @@ subroutine project_tangent_space(Pd,Ps, Pv, M, N, M_proj, N_proj)
 
  ! mat_tmp2 = 2 Ps N Pv
  call sym_square_mat_mul(Ps,N,ao_num, mat_tmp)
- call sym_square_mat_mul(map_tmp, Pv, ao_num, mat_tmp2)
+ call sym_square_mat_mul(mat_tmp, Pv, ao_num, mat_tmp2)
  mat_tmp2 = 2.d0 * mat_tmp2
 
  ! N_proj = sym(Pd(N-M)Ps + 2 Ps M Pv)
