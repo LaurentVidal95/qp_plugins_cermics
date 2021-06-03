@@ -29,8 +29,8 @@ BEGIN_PROVIDER[double precision, H_core_ortho, (ao_num,ao_num)]
   enddo
   
 END_PROVIDER
-
-  
+!
+!  
 subroutine get_J_K(P,J_P,K_P)
   use map_module
   implicit none
@@ -65,12 +65,12 @@ subroutine get_J_K(P,J_P,K_P)
 end subroutine get_J_K
 
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!                                                                            !
-!!!!! !!! !                       ENERGY                           ! !!! !!!!!
-!                                                                            !
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                                                                            !
+!!!! !!! !                       ENERGY                           ! !!! !!!!!
+                                                                            !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!
   
   double precision function get_rohf_energy(Pd,Ps) result(result)
     implicit none
