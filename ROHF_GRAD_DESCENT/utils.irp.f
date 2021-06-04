@@ -143,3 +143,18 @@ subroutine sym_square_mat_mul(A,B,n,C)
       B, size(B,1), 0.d0, &
       C, size(C,1))
 end
+
+subroutine sym_rect_mat_mul(A,B,m,n,k,C)
+ implicit none
+ BEGIN_DOC
+! C = A * B for general matrices 
+ END_DOC
+ double precision, intent(in) :: A(m, n), B(n, k)
+ integer, intent(in)  :: m,n,k
+ double precision, intent(out) :: C(m,k)
+!
+ call dgemm('N','N',m,k,n,1.d0, &
+      A, size(A,1), &
+      B, size(B,1), 0.d0, &
+      C, size(C,1))
+end

@@ -75,10 +75,10 @@ subroutine init_guess(Pd_init,Ps_init)
      do i=1,ao_num
         accu_d = 0.d0
         accu_s = 0.d0
-        do k=1,elec_beta_num
+        do k=1,n_d_occ
            accu_d += mo_coef_transp(k,i)*mo_coef_transp(k,j)
         enddo
-        do k=elec_beta_num+1,elec_alpha_num
+        do k=n_d_occ+1,elec_alpha_num
            accu_s +=  mo_coef_transp(k,i)*mo_coef_transp(k,j)
         enddo
         Pd_tmp(i,j) = accu_d
@@ -150,8 +150,8 @@ double precision function test_projs_ortho(Pd,Ps) result(result)
   do i=1,ao_num
      accu_s += Ps(i,i)
   enddo
-  out += accu_d - elec_beta_num
-  out -= accu_s - (elec_alpha_num-elec_beta_num)
+  out += accu_d - n_d_occ
+  out -= accu_s - (elec_alpha_num-n_d_occ)
 
   result = out
   
