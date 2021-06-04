@@ -1,5 +1,10 @@
 program test_rohf
- call test_energy_grad
+! call test_energy_grad
+ print*,'norm_proj_d_generic = ',norm_proj_d_generic
+ print*,'norm_proj_s_generic = ',norm_proj_s_generic
+ print*,''
+ print*,'norm_proj_d_prov    = ',norm_proj_d_prov
+ print*,'norm_proj_s_prov    = ',norm_proj_s_prov
 end
 subroutine test_energy_grad
  implicit none
@@ -15,7 +20,17 @@ subroutine test_energy_grad
  print*,''
  print*,''
  print*,'norm_X_mat_prov   =',norm_X_mat_prov
+ print*,'norm_X_mat_t_prov =',norm_X_mat_t_prov
  print*,''
+ print*,'norm_X_mat_generic   =',norm_X_mat_generic
+ print*,'norm_X_mat_t_generic =',norm_X_mat_t_generic
+ print*,''
+ print*,'trace_dm_d_ortho     =',trace_dm_d_ortho
+ print*,'n_d_occ              =',n_d_occ
+ print*,'trace_dm_s_ortho     =',trace_dm_s_ortho
+ print*,'n_s_occ              =',n_s_occ
+ print*,''
+ print*,'norm_proj_d_prov     =',norm_proj_d_prov
 end
 
 subroutine test_phi_coef

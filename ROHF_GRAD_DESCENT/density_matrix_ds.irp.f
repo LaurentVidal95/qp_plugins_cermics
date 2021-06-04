@@ -1,34 +1,36 @@
-!BEGIN_PROVIDER [ double precision, proj_basis, (ao_num, ao_num)]
+!BEGIN_PROVIDER [ double precision, density_mat_s_ortho, (ao_num, ao_num)]
 ! implicit none
-! call dgemm('N','T',ao_num,ao_num,ao_num,1.d0, &                                                                                   
-!      mo_coef, size(mo_coef,1), &
-!      mo_coef, size(mo_coef,1), 0.d0, &
-!      proj_basis, size(proj_basis,1))
+! call ao_to_ao_ortho(density_mat_s, density_mat_s_ortho)
 !END_PROVIDER 
-
-!BEGIN_PROVIDER [ double precision, proj_basis_ortho, (ao_num, ao_num) ]
-! implicit none
-! call ao_to_ao_ortho(proj_basis, proj_basis_ortho)
-!END_PROVIDER 
-!
-!BEGIN_PROVIDER [ double precision, proj_virt, (ao_num, ao_num) ]
-! implicit none
-! proj_virt = proj_basis - density_mat_d - density_mat_s 
-!END_PROVIDER 
-!
-!BEGIN_PROVIDER [ double precision, proj_virt_ortho, (ao_num, ao_num) ]
-! implicit none
-! call ao_to_ao_ortho(proj_virt, proj_virt_ortho)
-!END_PROVIDER 
-
-BEGIN_PROVIDER [ double precision, density_mat_s_ortho, (ao_num, ao_num)]
- implicit none
- call ao_to_ao_ortho(density_mat_s, density_mat_s_ortho)
-END_PROVIDER 
 
 BEGIN_PROVIDER [ double precision, density_mat_d_ortho, (ao_num, ao_num)]
  implicit none
- call ao_to_ao_ortho(density_mat_d, density_mat_d_ortho)
+ density_mat_d_ortho = 0.d0
+ call sym_rect_mat_mul(mo_coef_d_ortho,mo_coef_d_ortho_t,ao_num,n_d_occ,ao_num,density_mat_d_ortho)
+END_PROVIDER 
+
+BEGIN_PROVIDER [ double precision, trace_dm_d_ortho]
+ implicit none
+ integer ::i 
+ trace_dm_d_ortho = 0.d0
+ do i = 1, ao_num
+  trace_dm_d_ortho += density_mat_d_ortho(i,i)
+ enddo
+END_PROVIDER 
+
+BEGIN_PROVIDER [ double precision, density_mat_s_ortho, (ao_num, ao_num)]
+ implicit none
+ density_mat_s_ortho = 0.d0
+ call sym_rect_mat_mul(mo_coef_s_ortho,mo_coef_s_ortho_t,ao_num,n_s_occ,ao_num,density_mat_s_ortho)
+END_PROVIDER 
+
+BEGIN_PROVIDER [ double precision, trace_dm_s_ortho]
+ implicit none
+ integer ::i 
+ trace_dm_s_ortho = 0.d0
+ do i = 1, ao_num
+  trace_dm_s_ortho += density_mat_s_ortho(i,i)
+ enddo
 END_PROVIDER 
 
 BEGIN_PROVIDER [ double precision, density_mat_d, (ao_num, ao_num)]
@@ -115,6 +117,7 @@ subroutine mo_to_dm(phi_mo, n_mo, n_ao, dm_ao)
  double precision, allocatable :: phi_t(:,:)
  allocate(phi_t(n_mo, n_ao))
  call dtranspose(phi_mo,n_ao,phi_t,n_mo,n_ao,n_mo)
+ dm_ao = 0.d0
  call sym_rect_mat_mul(phi_mo,phi_t,n_ao,n_mo,n_ao,dm_ao)
 
 end
@@ -132,14 +135,25 @@ END_PROVIDER
 
 BEGIN_PROVIDER [ double precision, mo_coef_d_ortho, (ao_num, n_d_occ)]
  implicit none
+ mo_coef_d_ortho = 0.d0
  call sym_rect_mat_mul(sqrt_overlap,mo_coef_d,ao_num,ao_num,n_d_occ,mo_coef_d_ortho)
 END_PROVIDER 
 
 BEGIN_PROVIDER [ double precision, mo_coef_s_ortho, (ao_num, n_s_occ)]
  implicit none
+ mo_coef_s_ortho = 0.d0
  call sym_rect_mat_mul(sqrt_overlap,mo_coef_s,ao_num,ao_num,n_s_occ,mo_coef_s_ortho)
 END_PROVIDER 
 
+BEGIN_PROVIDER [ double precision, mo_coef_d_ortho_t, (n_d_occ, ao_num)]
+ implicit none
+ call dtranspose(mo_coef_d_ortho,ao_num, mo_coef_d_ortho_t,n_d_occ,ao_num,n_d_occ)
+END_PROVIDER 
+
+BEGIN_PROVIDER [ double precision, mo_coef_s_ortho_t, (n_s_occ, ao_num)]
+ implicit none
+ call dtranspose(mo_coef_s_ortho,ao_num, mo_coef_s_ortho_t,n_s_occ,ao_num,n_s_occ)
+END_PROVIDER 
 BEGIN_PROVIDER [ double precision, mo_coef_s, (ao_num, n_s_occ)]
  implicit none
  integer :: i,j
@@ -149,4 +163,15 @@ BEGIN_PROVIDER [ double precision, mo_coef_s, (ao_num, n_s_occ)]
    mo_coef_s(j,i) = mo_coef(j,list_n_s_occ(i))
   enddo
  enddo
+END_PROVIDER 
+
+
+BEGIN_PROVIDER [ double precision, Id_ao_num, (ao_num, ao_num)]
+ implicit none
+ integer :: i
+ Id_ao_num = 0.d0
+ do i = 1, ao_num
+  Id_ao_num(i,i) = 1.d0
+ enddo
+
 END_PROVIDER 

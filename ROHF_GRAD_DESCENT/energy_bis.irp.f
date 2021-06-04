@@ -80,14 +80,16 @@ end
 
  BEGIN_PROVIDER [ double precision, F_d_ortho, (ao_num, ao_num)]
 &BEGIN_PROVIDER [ double precision, F_s_ortho, (ao_num, ao_num)]
-&BEGIN_PROVIDER [ double precision, norm_F_d_ortho]
+ implicit none
+ call get_Fock_ortho(coulomb_d,exchange_d,coulomb_s,exchange_s, F_d_ortho,F_s_ortho)
+END_PROVIDER 
+
+ BEGIN_PROVIDER [ double precision, norm_F_d_ortho]
 &BEGIN_PROVIDER [ double precision, norm_F_s_ortho]
  implicit none
- double precision :: mat_tmp(ao_num,ao_num)
- call get_Fock_ortho(coulomb_d,exchange_d,coulomb_s,exchange_s, F_d_ortho,F_s_ortho)
  integer :: i,j
- double precision :: accu1, accu2
- accu1 = 0.d0
+ norm_F_d_ortho = 0.d0
+ norm_F_s_ortho = 0.d0
  do i = 1, ao_num
   do j = 1, ao_num
    norm_F_d_ortho += F_d_ortho(j,i)**2
@@ -98,11 +100,15 @@ END_PROVIDER
 
  BEGIN_PROVIDER [ double precision, grad_d_ortho, (ao_num, n_d_occ)]
 &BEGIN_PROVIDER [ double precision, grad_s_ortho, (ao_num, n_s_occ)]
-&BEGIN_PROVIDER [ double precision, norm_grad_d_ortho]
-&BEGIN_PROVIDER [ double precision, norm_grad_s_ortho]
  implicit none
+ grad_d_ortho = 0.d0
+ grad_s_ortho = 0.d0
  call sym_rect_mat_mul(F_d_ortho,mo_coef_d_ortho,ao_num,ao_num,n_d_occ,grad_d_ortho)
  call sym_rect_mat_mul(F_s_ortho,mo_coef_s_ortho,ao_num,ao_num,n_s_occ,grad_s_ortho)
+END_PROVIDER 
+
+ BEGIN_PROVIDER [ double precision, norm_grad_d_ortho]
+&BEGIN_PROVIDER [ double precision, norm_grad_s_ortho]
  integer :: i,l
  norm_grad_d_ortho = 0.d0
  do l = 1, n_d_occ

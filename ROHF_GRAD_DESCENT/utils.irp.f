@@ -147,7 +147,7 @@ end
 subroutine sym_rect_mat_mul(A,B,m,n,k,C)
  implicit none
  BEGIN_DOC
-! C = A * B for general matrices 
+! C += A * B for general matrices 
  END_DOC
  double precision, intent(in) :: A(m, n), B(n, k)
  integer, intent(in)  :: m,n,k
@@ -155,6 +155,18 @@ subroutine sym_rect_mat_mul(A,B,m,n,k,C)
 !
  call dgemm('N','N',m,k,n,1.d0, &
       A, size(A,1), &
-      B, size(B,1), 0.d0, &
+      B, size(B,1), 1.d0, &
       C, size(C,1))
+end
+
+
+subroutine phi_phi_t(phi,n_ao,n_mo,phi_phi_t_mat)
+ implicit none
+ double precision, intent(in)  :: phi(n_ao, n_mo)
+ integer, intent(in)           :: n_ao,n_mo
+ double precision, intent(out) :: phi_phi_t_mat(n_ao, n_ao)
+ double precision, allocatable :: phi_t(:,:)
+ allocate(phi_t(n_mo,n_ao))
+ call dtranspose(phi,n_ao, phi_t ,n_mo,n_ao,n_mo)
+ call sym_rect_mat_mul(phi,phi_t,n_ao,n_mo,n_ao,phi_phi_t_mat)
 end
