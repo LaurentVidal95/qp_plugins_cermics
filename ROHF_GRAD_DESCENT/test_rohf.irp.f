@@ -3,11 +3,19 @@ program test_rohf
 end
 subroutine test_energy_grad
  implicit none
- print*,'energy_tot_pd_ps = ',energy_tot_pd_ps
- print*,'norm_F_d_ortho' , norm_F_d_ortho
- print*,'norm_F_s_ortho' , norm_F_s_ortho
- print*,'norm_grad_d_ortho' , norm_grad_d_ortho
- print*,'norm_grad_s_ortho' , norm_grad_s_ortho
+ print*,'energy_tot_pd_ps  =',energy_tot_pd_ps
+ print*,''
+ print*,''
+ print*,'norm_F_d_ortho    =' , norm_F_d_ortho
+ print*,'norm_F_s_ortho    =' , norm_F_s_ortho
+ print*,''
+ print*,''
+ print*,'norm_grad_d_ortho =' , norm_grad_d_ortho
+ print*,'norm_grad_s_ortho =' , norm_grad_s_ortho
+ print*,''
+ print*,''
+ print*,'norm_X_mat_prov   =',norm_X_mat_prov
+ print*,''
 end
 
 subroutine test_phi_coef
