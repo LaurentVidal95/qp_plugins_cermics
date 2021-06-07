@@ -1,10 +1,11 @@
 program test_rohf
-! call test_energy_grad
+ call test_energy_grad
  print*,'norm_proj_d_generic = ',norm_proj_d_generic
  print*,'norm_proj_s_generic = ',norm_proj_s_generic
  print*,''
  print*,'norm_proj_d_prov    = ',norm_proj_d_prov
  print*,'norm_proj_s_prov    = ',norm_proj_s_prov
+ provide proj_d_test
 end
 subroutine test_energy_grad
  implicit none

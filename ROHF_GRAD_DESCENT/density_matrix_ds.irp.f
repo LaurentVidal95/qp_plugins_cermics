@@ -1,8 +1,3 @@
-!BEGIN_PROVIDER [ double precision, density_mat_s_ortho, (ao_num, ao_num)]
-! implicit none
-! call ao_to_ao_ortho(density_mat_s, density_mat_s_ortho)
-!END_PROVIDER 
-
 BEGIN_PROVIDER [ double precision, density_mat_d_ortho, (ao_num, ao_num)]
  implicit none
  density_mat_d_ortho = 0.d0
