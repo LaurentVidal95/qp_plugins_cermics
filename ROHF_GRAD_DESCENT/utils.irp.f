@@ -170,3 +170,22 @@ subroutine phi_phi_t(phi,n_ao,n_mo,phi_phi_t_mat)
  call dtranspose(phi,n_ao, phi_t ,n_mo,n_ao,n_mo)
  call sym_rect_mat_mul(phi,phi_t,n_ao,n_mo,n_ao,phi_phi_t_mat)
 end
+
+subroutine concat_mat(A,B,A_B,n_a,n_b,n)
+ implicit none
+ double precision, intent(in) :: A(n,n_a), B(n,n_b)
+ integer, intent(in) :: n_a, n_b, n
+ double precision, intent(out):: A_B(n,n_a+n_b)
+ integer :: i,j
+ do j = 1, n_a 
+  do i = 1, n
+   A_B(i,j) = A(i,j)
+  enddo
+ enddo
+
+ do j = 1, n_b
+  do i = 1, n
+   A_B(i,j+n_a) = B(i,j)
+  enddo
+ enddo
+end

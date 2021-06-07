@@ -1,5 +1,21 @@
 program test_rohf
- call test_energy_grad
+! call test_energy_grad
+! call test_projection
+! call test_retraction
+! call test_complex_mat
+! call test_exp_mat
+! provide proj_virt_prov_generic
+ provide U_proj_virt_generic
+end
+
+subroutine test_retraction
+ implicit none
+ print*,' norm_M_r_generic = ',norm_M_r_generic
+ print*,' norm_X_r_generic = ',norm_x_r_generic
+end
+
+subroutine test_projection
+ implicit none
  print*,'norm_proj_d_generic = ',norm_proj_d_generic
  print*,'norm_proj_s_generic = ',norm_proj_s_generic
  print*,''
@@ -7,6 +23,7 @@ program test_rohf
  print*,'norm_proj_s_prov    = ',norm_proj_s_prov
  provide proj_d_test
 end
+
 subroutine test_energy_grad
  implicit none
  print*,'energy_tot_pd_ps  =',energy_tot_pd_ps

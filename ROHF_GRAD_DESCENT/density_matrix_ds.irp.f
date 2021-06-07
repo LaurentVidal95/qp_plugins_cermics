@@ -33,6 +33,10 @@ BEGIN_PROVIDER [ double precision, density_mat_d, (ao_num, ao_num)]
  density_mat_d = SCF_density_matrix_ao_beta
 END_PROVIDER 
 
+BEGIN_PROVIDER [ double precision, proj_virt_prov, (ao_num, ao_num)]
+ implicit none
+ proj_virt_prov = Id_ao_num - density_mat_d_ortho - density_mat_s_ortho 
+END_PROVIDER 
 
 BEGIN_PROVIDER [ double precision, density_mat_s, (ao_num, ao_num)]
  implicit none
@@ -96,6 +100,11 @@ END_PROVIDER
 BEGIN_PROVIDER [ integer, n_d_occ]
  implicit none
  n_d_occ =  elec_beta_num
+END_PROVIDER 
+
+BEGIN_PROVIDER [ integer, n_occ_prov]
+ implicit none
+ n_occ_prov  =  n_d_occ +  n_s_occ 
 END_PROVIDER 
 
 
@@ -168,5 +177,12 @@ BEGIN_PROVIDER [ double precision, Id_ao_num, (ao_num, ao_num)]
  do i = 1, ao_num
   Id_ao_num(i,i) = 1.d0
  enddo
+
+END_PROVIDER 
+
+
+BEGIN_PROVIDER [ double precision, mo_coef_occ_tot, (ao_num, n_occ_prov)]
+ implicit none
+
 
 END_PROVIDER 
