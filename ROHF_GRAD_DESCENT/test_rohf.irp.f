@@ -5,7 +5,8 @@ program test_rohf
 ! call test_complex_mat
 ! call test_exp_mat
 ! provide proj_virt_prov_generic
- provide U_proj_virt_generic
+! provide U_proj_virt_generic
+ provide retract_d_generic
 end
 
 subroutine test_retraction

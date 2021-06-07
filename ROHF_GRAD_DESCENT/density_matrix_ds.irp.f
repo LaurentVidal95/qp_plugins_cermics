@@ -183,6 +183,6 @@ END_PROVIDER
 
 BEGIN_PROVIDER [ double precision, mo_coef_occ_tot, (ao_num, n_occ_prov)]
  implicit none
-
+ call concat_mat(mo_coef_d_ortho,mo_coef_s_ortho,mo_coef_occ_tot,n_d_occ,n_s_occ,ao_num)
 
 END_PROVIDER 
